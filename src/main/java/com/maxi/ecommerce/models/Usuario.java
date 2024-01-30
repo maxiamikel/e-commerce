@@ -1,16 +1,29 @@
 package com.maxi.ecommerce.models;
 
+import java.util.List;
+
 import com.maxi.ecommerce.enums.TipoUsuario;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
-//@Entity
+@Entity
+@Table(name = "usuarios")
 public class Usuario {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nombre;
     private String username;
+
+    @Column(unique = true)
     private String email;
     private String telefono;
     private String direccion;
@@ -18,6 +31,12 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipo;
     private String password;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Producto> productos;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Orden> ordenes;
 
     public Usuario() {
     }
@@ -97,6 +116,14 @@ public class Usuario {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Producto> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
     }
 
     @Override
