@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.maxi.ecommerce.models.Producto;
@@ -37,8 +38,8 @@ public class ProductoServiceIMplementation implements ProductoService {
     }
 
     @Override
-    public List<Producto> findAll() {
-        return productoRepository.findAll();
+    public List<Producto> findAll(Pageable page) {
+        return productoRepository.findAll(page).toList();
     }
 
 }

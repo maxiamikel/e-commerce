@@ -3,11 +3,14 @@ package com.maxi.ecommerce.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.maxi.ecommerce.models.Producto;
 import com.maxi.ecommerce.models.Usuario;
@@ -23,8 +26,11 @@ public class ProductoController {
     private ProductoServiceIMplementation productoService;
 
     @GetMapping("")
-    public String show(Model model) {
-        model.addAttribute("productos", productoService.findAll());
+    public String show(Model model,
+            @RequestParam(name = "pageNumber", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(name = "pageSize", required = false, defaultValue = "2") int pageSize) {
+        Pageable page = PageRequest.of(pageNumber, pageSize);
+        model.addAttribute("productos", productoService.findAll(page));
         return "productos/show";
     }
 
