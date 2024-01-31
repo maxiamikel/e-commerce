@@ -1,5 +1,6 @@
 package com.maxi.ecommerce.controllers;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.maxi.ecommerce.models.Producto;
 import com.maxi.ecommerce.models.Usuario;
 import com.maxi.ecommerce.services.producto.ProductoServiceIMplementation;
+import com.maxi.ecommerce.services.producto.UploadFileService;
 
 @Controller
 @RequestMapping("/productos")
@@ -27,6 +30,9 @@ public class ProductoController {
 
     @Autowired
     private ProductoServiceIMplementation productoService;
+
+    @Autowired
+    private UploadFileService uploadFileService;
 
     @GetMapping("")
     public String show(Model model,
@@ -43,11 +49,25 @@ public class ProductoController {
     }
 
     @PostMapping("/save")
-    public String save(Producto producto) {
+    public String save(Producto producto, @RequestParam("img") MultipartFile file) throws IOException {
         Usuario usuario = new Usuario();
         usuario.setId(1);
         LOGGER.info("Nuevo producto {}", producto);
         producto.setUsuario(usuario);
+
+        if (producto.getId() == null) {
+            String nombreImage = uploadFileService.uploadFoto(file);
+            producto.setImagen(nombreImage);
+        } else {
+            if (file.isEmpty()) {
+                Producto productoDB = new Producto();
+                productoDB = productoService.get(producto.getId()).get();
+                producto.setImagen(productoDB.getImagen());
+            } else {
+                String nombreImage = uploadFileService.uploadFoto(file);
+                producto.setImagen(nombreImage);
+            }
+        }
         productoService.save(producto);
         return "redirect:/productos";
     }
@@ -64,13 +84,33 @@ public class ProductoController {
     }
 
     @PostMapping("/update")
-    public String update(Producto producto) {
+    public String update(Producto producto, @RequestParam("img") MultipartFile file) throws IOException {
+        if (file.isEmpty()) {/* Cuando editar un producto sen midificar la imagen */
+            Producto productoDB = new Producto();
+            productoDB = productoService.get(producto.getId()).get();
+            producto.setImagen(productoDB.getImagen());
+        } else {
+            Producto productoDB = new Producto();
+            productoDB = productoService.get(producto.getId()).get();
+
+            if (productoDB.getImagen().equals("default.jpg")) {
+                uploadFileService.eleminarFoto(productoDB.getImagen());
+            }
+            String nombreImage = uploadFileService.uploadFoto(file);
+            producto.setImagen(nombreImage);
+        }
         productoService.update(producto);
         return "redirect:/productos";
     }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Integer id) {
+        Producto producto = new Producto();
+        producto = productoService.get(id).get();
+        // Eliminar la foto quando ella no es la imagen por default
+        if (!producto.getImagen().equals("default.jpg")) {
+            uploadFileService.eleminarFoto(producto.getImagen());
+        }
         productoService.delete(id);
         return "redirect:/productos";
     }
