@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Spring eCommerce</title>
+  <title>MaShop</title>
 
 
   <!-- Bootstrap core CSS -->
@@ -30,7 +30,7 @@
 
   <!-- Page Heading/Breadcrumbs -->
   <h1 class="mt-4 mb-3">
-    Spring eCommerce <small>Productos</small>
+    MaShop <small>Productos</small>
   </h1>
 
   <ol class="breadcrumb">
@@ -39,7 +39,7 @@
   </ol>
 
   <h2>Crear Producto</h2>
-  <form class="form-horizontal" action="#" method="post" enctype="multipart/form-data">
+  <form class="form-horizontal" th:action="@{/productos/save}" method="post" enctype="multipart/form-data">
     <div class="form-group">
       <label class="control-label col-sm-2" for="nombre">Nombre:</label>
       <div class="col-sm-10">
@@ -94,7 +94,8 @@
 <!-- /.container -->
 
 <!-- Footer -->
-<div th:include="administrador/template_admin.html::footer"></div>
+
+<div th:include="/administrador/template_admin.html::footer"></div>
 
 <!-- Bootstrap core JavaScript -->
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>

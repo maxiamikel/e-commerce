@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Spring eCommerce</title>
+  <title>MaShop</title>
 
 
   <!-- Bootstrap core CSS -->
@@ -22,14 +22,15 @@
 <body>
 
   <!-- Navigation -->
-  <div th:include="administrador/template_admin.html::header"></div>
+  <!-- <div th:replace="fragmentos/fragmentos :: cabecalho"></div> -->
+  <div th:replace="administrador/template_admin :: header"></div>
 <!-- Page Content -->
 <div class="container">
 
 
   <!-- Page Heading/Breadcrumbs -->
   <h1 class="mt-4 mb-3">
-    Spring eCommerce <small>Productos</small>
+    MaShop <small>Productos</small>
   </h1>
 
   <ol class="breadcrumb">
@@ -51,9 +52,9 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td ></td>
-        <td ></td>
+      <tr th:each="producto : ${productos}">
+        <td th:text="${producto.nombre}"></td>
+        <td th:text="${producto.descripcion}">ooo</td>
         <td ></td>
         <td ></td>
         <td><a  class="btn btn-warning" href="">Editar</a> </td>
@@ -66,7 +67,7 @@
 <!-- /.container -->
 
 <!-- Footer -->
-<div th:include="administrador/template_admin.html::footer"></div>
+<div th:replace="administrador/template_admin :: footer"></div>
 
 <!-- Bootstrap core JavaScript -->
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
