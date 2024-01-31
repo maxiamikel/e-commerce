@@ -12,19 +12,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.maxi.ecommerce.services.producto.ProductoServiceIMplementation;
 
 @Controller
-@RequestMapping("/administrador")
-public class AdminController {
+@RequestMapping("/")
+public class HomeController {
 
     @Autowired
-    private ProductoServiceIMplementation productoService;
+    private ProductoServiceIMplementation ProductoService;
 
-    @GetMapping("")
+    @GetMapping("/")
     public String home(Model model,
             @RequestParam(name = "pageNumber", required = false, defaultValue = "0") int pageNumber,
-            @RequestParam(name = "pageSize", required = false, defaultValue = "4") int pageSize) {
+            @RequestParam(name = "pageSize", required = false, defaultValue = "8") int pageSize) {
         Pageable page = PageRequest.of(pageNumber, pageSize);
-        model.addAttribute("productos", productoService.findAll(page));
-        return "/administrador/home";
+        model.addAttribute("productos", ProductoService.findAll(page));
+        return "usuario/home";
     }
 
 }
