@@ -31,6 +31,7 @@ public class HomeController {
     private ProductoServiceIMplementation productoService;
 
     private List<DetalleOrden> detalles = new ArrayList<DetalleOrden>();
+
     private Orden orden = new Orden();
 
     @GetMapping("/")
@@ -75,6 +76,28 @@ public class HomeController {
         model.addAttribute("orden", orden);
         // LOGGER.info("Id selecionado y el producto correspondiente: {} {}", id,
         // producto);
+
+        return "usuario/carrito";
+    }
+
+    @GetMapping("/delete/cart/{id}")
+    public String deleteProductFromCatr(@PathVariable Integer id, Model model) {
+
+        List<DetalleOrden> listaOrdenes = new ArrayList<DetalleOrden>();
+
+        for (DetalleOrden detalleOrden : detalles) {
+            if (detalleOrden.getProducto().getId() != id) {
+                listaOrdenes.add(detalleOrden);
+            }
+        }
+        detalles = listaOrdenes;
+        double sumTotal = 0;
+        sumTotal = detalles.stream().mapToDouble(x -> x.getTotal()).sum();
+
+        orden.setTotal(sumTotal);
+
+        model.addAttribute("cart", detalles);
+        model.addAttribute("orden", orden);
 
         return "usuario/carrito";
     }

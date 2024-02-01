@@ -1,8 +1,6 @@
 package com.maxi.ecommerce.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.maxi.ecommerce.models.DetalleOrden;
 import com.maxi.ecommerce.models.Producto;
 import com.maxi.ecommerce.models.Usuario;
 import com.maxi.ecommerce.services.producto.ProductoServiceIMplementation;
