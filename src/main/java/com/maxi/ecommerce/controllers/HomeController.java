@@ -1,7 +1,11 @@
 package com.maxi.ecommerce.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,17 +17,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.maxi.ecommerce.models.DetalleOrden;
+import com.maxi.ecommerce.models.Orden;
 import com.maxi.ecommerce.models.Producto;
 import com.maxi.ecommerce.services.producto.ProductoServiceIMplementation;
 
 @Controller
 @RequestMapping("/")
 public class HomeController {
+    private final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
     private ProductoServiceIMplementation productoService;
 
-    // List<Producto> productos = new ArrayList<>();
+    private List<DetalleOrden> detalles = new ArrayList<DetalleOrden>();
+    private Orden orden = new Orden();
 
     @GetMapping("/")
     public String home(Model model,
@@ -44,7 +52,29 @@ public class HomeController {
     }
 
     @PostMapping("/cart")
-    public String addToCart() {
+    public String addToCart(@RequestParam Integer id, @RequestParam Integer cantidad, Model model) {
+        DetalleOrden detalleOrden = new DetalleOrden();
+        Producto producto = new Producto();
+        double sumTotal = 0;
+
+        Optional<Producto> productoDB = productoService.get(id);
+        producto = productoDB.get();
+
+        detalleOrden.setCantidad(cantidad);
+        detalleOrden.setNombre(producto.getNombre());
+        detalleOrden.setPrecio(producto.getPrecio());
+        detalleOrden.setTotal(producto.getPrecio() * cantidad);
+        detalleOrden.setProducto(producto);
+
+        detalles.add(detalleOrden);
+        sumTotal = detalles.stream().mapToDouble(dt -> dt.getTotal()).sum();
+
+        orden.setTotal(sumTotal);
+
+        model.addAttribute("cart", detalles);
+        model.addAttribute("orden", orden);
+        // LOGGER.info("Id selecionado y el producto correspondiente: {} {}", id,
+        // producto);
 
         return "usuario/carrito";
     }
