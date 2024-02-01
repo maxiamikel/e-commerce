@@ -67,7 +67,13 @@ public class HomeController {
         detalleOrden.setTotal(producto.getPrecio() * cantidad);
         detalleOrden.setProducto(producto);
 
-        detalles.add(detalleOrden);
+        // filtrar producto repetido en la lista
+        Integer idProducto = producto.getId();
+        boolean existe = detalles.stream().anyMatch(x -> x.getProducto().getId() == idProducto);
+        if (!existe) {
+            detalles.add(detalleOrden);
+        }
+
         sumTotal = detalles.stream().mapToDouble(dt -> dt.getTotal()).sum();
 
         orden.setTotal(sumTotal);
@@ -96,6 +102,14 @@ public class HomeController {
 
         orden.setTotal(sumTotal);
 
+        model.addAttribute("cart", detalles);
+        model.addAttribute("orden", orden);
+
+        return "usuario/carrito";
+    }
+
+    @GetMapping("/ver/carrito")
+    public String verCarrito(Model model) {
         model.addAttribute("cart", detalles);
         model.addAttribute("orden", orden);
 
