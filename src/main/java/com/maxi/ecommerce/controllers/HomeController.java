@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,6 +22,8 @@ public class HomeController {
 
     @Autowired
     private ProductoServiceIMplementation productoService;
+
+    // List<Producto> productos = new ArrayList<>();
 
     @GetMapping("/")
     public String home(Model model,
@@ -38,6 +41,12 @@ public class HomeController {
         producto = productoDB.get();
         model.addAttribute("producto", producto);
         return "usuario/detalle_producto";
+    }
+
+    @PostMapping("/cart")
+    public String addToCart() {
+
+        return "usuario/carrito";
     }
 
 }
