@@ -1,6 +1,7 @@
 package com.maxi.ecommerce.controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,8 @@ import com.maxi.ecommerce.models.DetalleOrden;
 import com.maxi.ecommerce.models.Orden;
 import com.maxi.ecommerce.models.Producto;
 import com.maxi.ecommerce.models.Usuario;
+import com.maxi.ecommerce.services.detalleorden.DetalleOrdenServiceImplementation;
+import com.maxi.ecommerce.services.orden.OrdenServiceImplementation;
 import com.maxi.ecommerce.services.producto.ProductoServiceIMplementation;
 import com.maxi.ecommerce.services.usuario.UsuarioServiceImplementation;
 
@@ -34,6 +37,12 @@ public class HomeController {
 
     @Autowired
     private UsuarioServiceImplementation usuarioService;
+
+    @Autowired
+    private OrdenServiceImplementation ordenService;
+
+    @Autowired
+    private DetalleOrdenServiceImplementation detalleOrdenService;
 
     private List<DetalleOrden> detalles = new ArrayList<DetalleOrden>();
 
@@ -129,5 +138,26 @@ public class HomeController {
         model.addAttribute("orden", orden);
         model.addAttribute("usuario", usuario);
         return "usuario/detalle_orden";
+    }
+
+    @GetMapping("/saveOrden")
+    public String saveOrden() {
+        Date fechaCreacion = new Date();
+        orden.setFechaCreacion(fechaCreacion);
+        orden.setNumero(ordenService.generateOrdenNumber());
+
+        Usuario usuario = usuarioService.findById(1).get();
+        orden.setUsuario(usuario);
+        ordenService.save(orden);
+
+        for (DetalleOrden detalleOrden : detalles) {
+            detalleOrden.setOrden(orden);
+            detalleOrdenService.save(detalleOrden);
+        }
+
+        orden = new Orden();
+        detalles.clear();
+
+        return "redirect:/";
     }
 }

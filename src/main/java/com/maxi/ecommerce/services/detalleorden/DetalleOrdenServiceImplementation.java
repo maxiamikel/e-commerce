@@ -13,7 +13,7 @@ public class DetalleOrdenServiceImplementation implements DetalleOrdenService {
     private DetalleOrdenRepository detalleOrdenRepository;
 
     @Override
-    public DetalleOrden create(DetalleOrden detalleOrden) {
+    public DetalleOrden save(DetalleOrden detalleOrden) {
         return detalleOrdenRepository.save(detalleOrden);
     }
 
