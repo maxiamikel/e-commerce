@@ -8,5 +8,7 @@ public interface UsuarioService {
 
     public Optional<Usuario> findById(Integer id);
 
+    public Usuario save(Usuario usuario);
+
     // public Usuario findById(Integer id);
 }
