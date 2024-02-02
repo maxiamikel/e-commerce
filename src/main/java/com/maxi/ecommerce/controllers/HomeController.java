@@ -160,4 +160,14 @@ public class HomeController {
 
         return "redirect:/";
     }
+
+    @PostMapping("/search")
+    public String searchProducto(@RequestParam String textBuscar, Model model) {
+        LOGGER.info("Producto {}", textBuscar);
+        List<Producto> productoList = new ArrayList<Producto>();
+        productoList = productoService.findByNombreLike(textBuscar);
+        model.addAttribute("productos", productoList);
+
+        return "usuario/home";
+    }
 }

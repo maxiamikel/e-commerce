@@ -42,4 +42,9 @@ public class ProductoServiceIMplementation implements ProductoService {
         return productoRepository.findAll(page).toList();
     }
 
+    @Override
+    public List<Producto> findByNombreLike(String nombre) {
+        return productoRepository.findByNombreLikeParam(nombre);
+    }
+
 }
