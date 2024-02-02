@@ -170,4 +170,16 @@ public class HomeController {
 
         return "usuario/home";
     }
+
+    @GetMapping("/signup")
+    public String signup() {
+
+        return "usuario/registro";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+
+        return "usuario/login";
+    }
 }
