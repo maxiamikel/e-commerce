@@ -30,7 +30,7 @@
 
       <!-- Page Heading/Breadcrumbs -->
       <h1 class="mt-4 mb-3">
-        MaShop<small>Carrito</small>
+        <small>MaShop</small>
       </h1>
 
       <ol class="breadcrumb">
@@ -70,7 +70,7 @@
 
             <ul class="list-group">
               <li class="list-group-item"><h5 th:text="${orden.total}"></h5></li>
-              <a href="resumenorden.html" class="btn btn-dark">Ver Orden</a>
+              <a th:href="@{/detalle/orden}" class="btn btn-dark">Ver Orden</a>
             </ul>
           </div>
 

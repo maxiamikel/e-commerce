@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.maxi.ecommerce.models.DetalleOrden;
 import com.maxi.ecommerce.models.Orden;
 import com.maxi.ecommerce.models.Producto;
+import com.maxi.ecommerce.models.Usuario;
 import com.maxi.ecommerce.services.producto.ProductoServiceIMplementation;
+import com.maxi.ecommerce.services.usuario.UsuarioServiceImplementation;
 
 @Controller
 @RequestMapping("/")
@@ -29,6 +31,9 @@ public class HomeController {
 
     @Autowired
     private ProductoServiceIMplementation productoService;
+
+    @Autowired
+    private UsuarioServiceImplementation usuarioService;
 
     private List<DetalleOrden> detalles = new ArrayList<DetalleOrden>();
 
@@ -116,4 +121,13 @@ public class HomeController {
         return "usuario/carrito";
     }
 
+    @GetMapping("/detalle/orden")
+    public String verdetelleOrden(Model model) {
+
+        Usuario usuario = usuarioService.findById(1).get();
+        model.addAttribute("cart", detalles);
+        model.addAttribute("orden", orden);
+        model.addAttribute("usuario", usuario);
+        return "usuario/detalle_orden";
+    }
 }
