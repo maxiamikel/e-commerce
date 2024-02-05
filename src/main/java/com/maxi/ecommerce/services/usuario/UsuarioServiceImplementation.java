@@ -27,4 +27,9 @@ public class UsuarioServiceImplementation implements UsuarioService {
         return usuario;
     }
 
+    @Override
+    public Optional<Usuario> findByEmail(String email) {
+        return usuarioRepository.findByEmail(email);
+    }
+
 }

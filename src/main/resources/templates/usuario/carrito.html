@@ -22,7 +22,10 @@
 <body>
 
   <!-- Navigation -->
-  <div th:replace="usuario/template_usuario :: header"></div>
+  <div th:replace="usuario/template_usuario :: header" th:if="${sesion == null}"></div>
+
+  <div th:replace="usuario/template_usuario :: header-user" th:unless="${sesion==null}"></div>
+
 
     <!-- Page Content -->
     <div class="container">

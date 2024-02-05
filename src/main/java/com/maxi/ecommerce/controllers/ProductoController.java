@@ -21,6 +21,9 @@ import com.maxi.ecommerce.models.Producto;
 import com.maxi.ecommerce.models.Usuario;
 import com.maxi.ecommerce.services.producto.ProductoServiceIMplementation;
 import com.maxi.ecommerce.services.producto.UploadFileService;
+import com.maxi.ecommerce.services.usuario.UsuarioServiceImplementation;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/productos")
@@ -33,6 +36,9 @@ public class ProductoController {
 
     @Autowired
     private UploadFileService uploadFileService;
+
+    @Autowired
+    private UsuarioServiceImplementation usuarioService;
 
     @GetMapping("")
     public String show(Model model,
@@ -49,9 +55,9 @@ public class ProductoController {
     }
 
     @PostMapping("/save")
-    public String save(Producto producto, @RequestParam("img") MultipartFile file) throws IOException {
-        Usuario usuario = new Usuario();
-        usuario.setId(1);
+    public String save(Producto producto, HttpSession session, @RequestParam("img") MultipartFile file)
+            throws IOException {
+        Usuario usuario = usuarioService.findById(Integer.parseInt(session.getAttribute("userId").toString())).get();
         LOGGER.info("Nuevo producto {}", producto);
         producto.setUsuario(usuario);
 

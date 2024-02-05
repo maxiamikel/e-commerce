@@ -27,6 +27,8 @@ import com.maxi.ecommerce.services.orden.OrdenServiceImplementation;
 import com.maxi.ecommerce.services.producto.ProductoServiceIMplementation;
 import com.maxi.ecommerce.services.usuario.UsuarioServiceImplementation;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/")
 public class HomeController {
@@ -49,11 +51,12 @@ public class HomeController {
     private Orden orden = new Orden();
 
     @GetMapping("/")
-    public String home(Model model,
+    public String home(Model model, HttpSession session,
             @RequestParam(name = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @RequestParam(name = "pageSize", required = false, defaultValue = "8") int pageSize) {
         Pageable page = PageRequest.of(pageNumber, pageSize);
         model.addAttribute("productos", productoService.findAll(page));
+        model.addAttribute("sesion", session.getAttribute("userId"));
         return "usuario/home";
     }
 
@@ -123,17 +126,17 @@ public class HomeController {
     }
 
     @GetMapping("/ver/carrito")
-    public String verCarrito(Model model) {
+    public String verCarrito(Model model, HttpSession session) {
         model.addAttribute("cart", detalles);
         model.addAttribute("orden", orden);
-
+        model.addAttribute("sesion", session.getAttribute("userId"));
         return "usuario/carrito";
     }
 
     @GetMapping("/detalle/orden")
-    public String verdetelleOrden(Model model) {
+    public String verdetelleOrden(Model model, HttpSession session) {
 
-        Usuario usuario = usuarioService.findById(1).get();
+        Usuario usuario = usuarioService.findById(Integer.parseInt(session.getAttribute("userId").toString())).get();
         model.addAttribute("cart", detalles);
         model.addAttribute("orden", orden);
         model.addAttribute("usuario", usuario);
@@ -141,12 +144,13 @@ public class HomeController {
     }
 
     @GetMapping("/saveOrden")
-    public String saveOrden() {
+    public String saveOrden(HttpSession session) {
         Date fechaCreacion = new Date();
+        Orden orden = new Orden();
         orden.setFechaCreacion(fechaCreacion);
         orden.setNumero(ordenService.generateOrdenNumber());
 
-        Usuario usuario = usuarioService.findById(1).get();
+        Usuario usuario = usuarioService.findById(Integer.parseInt(session.getAttribute("userId").toString())).get();
         orden.setUsuario(usuario);
         ordenService.save(orden);
 
@@ -163,7 +167,7 @@ public class HomeController {
 
     @PostMapping("/search")
     public String searchProducto(@RequestParam String textBuscar, Model model) {
-        LOGGER.info("Producto {}", textBuscar);
+        // LOGGER.info("Producto {}", textBuscar);
         List<Producto> productoList = new ArrayList<Producto>();
         productoList = productoService.findByNombreLike(textBuscar);
         model.addAttribute("productos", productoList);

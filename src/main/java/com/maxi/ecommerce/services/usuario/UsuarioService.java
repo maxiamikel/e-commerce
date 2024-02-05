@@ -10,5 +10,7 @@ public interface UsuarioService {
 
     public Usuario save(Usuario usuario);
 
+    Optional<Usuario> findByEmail(String email);
+
     // public Usuario findById(Integer id);
 }
