@@ -58,4 +58,10 @@ public class UsuarioController {
         // return "usuario/login";
     }
 
+    @GetMapping("/compras")
+    public String getCompras(HttpSession session, Model model) {
+        model.addAttribute("sesion", session.getAttribute("userId"));
+        return "usuario/compras";
+    }
+
 }
